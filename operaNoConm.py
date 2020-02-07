@@ -8,14 +8,25 @@ logging.basicConfig(format='%(asctime)s.%(msecs)03d [%(threadName)s] - %(message
 #dale un valor inicial a la variable
 
 var = 1
+lock = threading.Lock()
 
 def sumarUno():
     global var
-    var += 1
+    global lock
+    try:
+        lock.acquire()
+        var += 1
+    finally:
+        lock.release()
 
 def multiplicarPorDos():
     global var
-    var = var*2
+    global lock
+    try:
+        lock.acquire()
+        var = var*2
+    finally:
+        lock.release()
 #ejecutá cada función en un thread separado y anotá los resultados
 t1 = threading.Thread(target=sumarUno, name='Sumar 1')
 
