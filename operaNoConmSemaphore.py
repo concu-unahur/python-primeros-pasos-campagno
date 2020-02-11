@@ -7,34 +7,38 @@ logging.basicConfig(format='%(asctime)s.%(msecs)03d [%(threadName)s] - %(message
 #defino funciones y variable
 #dale un valor inicial a la variable
 
+#Implementamos Semaphore para realizar el Mismo ejercicio en lugar de utilizar Lock
+
 var = 1
-lock = threading.Lock()
+semaphore = threading.Semaphore(3)
 
 def sumarUno():
     global var
-    global lock
+    global semaphore
     try:
-        #lock.acquire()
+        semaphore.acquire()
         var += 1
     finally:
-        lock.release()
+        semaphore.release()
 
 def multiplicarPorDos():
     global var
-    global lock
+    global semaphore
     try:
-        lock.acquire()
+        semaphore.acquire()
         var = var*2
     finally:
-        lock.release()
+        semaphore.release()
+
+
 #ejecutá cada función en un thread separado y anotá los resultados
+
+
 t1 = threading.Thread(target=sumarUno, name='Sumar 1')
-
-
 t2 = threading.Thread(target=multiplicarPorDos, name='Multiplica por 2')
 
 
-lock.acquire()
+#semaphore.acquire()
 
 
 t2.start()
@@ -43,8 +47,8 @@ t1.start()
 
 logging.info(t2)
 
-t1.join()
-t2.join()
+#t1.join()
+#t2.join()
 
 print(f'Total vale {var}')
 
